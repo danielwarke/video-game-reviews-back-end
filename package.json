@@ -1,0 +1,25 @@
+{
+  "name": "vgr-rest-api",
+  "version": "1.0.0",
+  "description": "REST API for Dano Warke Video Game Reviews Project  built using Node & Express ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "SET MONGO_USER=danowarke&SET MONGO_PASSWORD=mongopass2020&SET MONGO_DEFAULT_DATABASE=VideoGameReviews&node app",
+    "start-server": "node app",
+    "start:dev": "nodemon app"
+  },
+  "author": "Dano Warke",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.6.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

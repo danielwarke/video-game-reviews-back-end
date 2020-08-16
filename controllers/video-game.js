@@ -49,24 +49,24 @@ exports.getVideoGameReviews = async (req, res, next) => {
 exports.createVideoGame = async (req, res, next) => {
 	const errors = validationResult(req);
 	
-	if (!errors.isEmpty()) {
-		const error = new Error('Validation failed, entered data is incorrect.');
-		error.statusCode = 422;
-		throw error;
-	}
-	
-	const title = req.body.title;
-	const description = req.body.description;
-	const imageUrl = req.body.imageUrl;
-	
-	const videoGame = new VideoGame({
-		title: title,
-		description: description,
-		creator: req.userId,
-		imageUrl: imageUrl
-	});
-	
 	try {
+		if (!errors.isEmpty()) {
+			const error = new Error('Validation failed, entered data is incorrect.');
+			error.statusCode = 422;
+			throw error;
+		}
+		
+		const title = req.body.title;
+		const description = req.body.description;
+		const imageUrl = req.body.imageUrl;
+		
+		const videoGame = new VideoGame({
+			title: title,
+			description: description,
+			creator: req.userId,
+			imageUrl: imageUrl
+		});
+		
 		const newVideoGame = await videoGame.save();
 		
 		res.status(201).json({
@@ -89,18 +89,18 @@ exports.createVideoGame = async (req, res, next) => {
 exports.updateVideoGame = async (req, res, next) => {
 	const errors = validationResult(req);
 	
-	if (!errors.isEmpty()) {
-		const error = new Error('Validation failed, entered data is incorrect.');
-		error.statusCode = 422;
-		throw error;
-	}
-	
-	const videoGameId = req.params.videoGameId;
-	const title = req.body.title;
-	const description = req.body.description;
-	const imageUrl = req.body.imageUrl;
-	
 	try {
+		if (!errors.isEmpty()) {
+			const error = new Error('Validation failed, entered data is incorrect.');
+			error.statusCode = 422;
+			throw error;
+		}
+		
+		const videoGameId = req.params.videoGameId;
+		const title = req.body.title;
+		const description = req.body.description;
+		const imageUrl = req.body.imageUrl;
+		
 		const videoGame = await VideoGame.findById(videoGameId);
 		
 		if (!videoGame) {

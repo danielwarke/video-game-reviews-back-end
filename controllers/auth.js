@@ -7,18 +7,18 @@ const User = require('../models/user');
 exports.signup = async (req, res, next) => {
 	const errors = validationResult(req);
 	
-	if (!errors.isEmpty()) {
-		const error = new Error('Validation failed.');
-		error.statusCode = 422;
-		error.data = errors.array();
-		throw error;
-	}
-	
-	const email = req.body.email;
-	const username = req.body.username;
-	const password = req.body.password;
-	
 	try {
+		if (!errors.isEmpty()) {
+			const error = new Error('Validation failed.');
+			error.statusCode = 422;
+			error.data = errors.array();
+			throw error;
+		}
+		
+		const email = req.body.email;
+		const username = req.body.username;
+		const password = req.body.password;
+		
 		const hashedPw = await bcrypt.hash(password, 12);
 		const user = new User({
 			email: email,
@@ -27,7 +27,10 @@ exports.signup = async (req, res, next) => {
 		});
 		
 		const newUser = await user.save();
-		res.status(201).json({ message: 'User created!', userId: newUser._id });
+		res.status(201).json({
+			message: 'Your user account has been created. Please Log In.',
+			userId: newUser._id
+		});
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500;
@@ -62,7 +65,10 @@ exports.login = async (req, res, next) => {
 			userId: user._id.toString()
 		}, 'videogamesarefun', { expiresIn: '4h' });
 		
-		res.status(200).json({ token: token, userId: user._id.toString() });
+		res.status(200).json({
+			token: token,
+			userId: user._id.toString()
+		});
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500;

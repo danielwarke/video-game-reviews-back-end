@@ -53,25 +53,25 @@ exports.getUserReviews = async (req, res, next) => {
 exports.createReview = async (req, res, next) => {
 	const errors = validationResult(req);
 	
-	if (!errors.isEmpty()) {
-		const error = new Error('Validation failed, entered data is incorrect.');
-		error.statusCode = 422;
-		throw error;
-	}
-	
-	const videoGameId = req.body.videoGameId;
-	const title = req.body.title;
-	const body = req.body.body;
-	const rating = req.body.rating;
-	
-	const review = new Review({
-		title: title,
-		body: body,
-		rating: rating,
-		creator: req.userId
-	});
-	
 	try {
+		if (!errors.isEmpty()) {
+			const error = new Error('Validation failed, entered data is incorrect.');
+			error.statusCode = 422;
+			throw error;
+		}
+		
+		const videoGameId = req.body.videoGameId;
+		const title = req.body.title;
+		const body = req.body.body;
+		const rating = req.body.rating;
+		
+		const review = new Review({
+			title: title,
+			body: body,
+			rating: rating,
+			creator: req.userId
+		});
+		
 		const newReview = await review.save();
 		
 		const user = await User.findById(req.userId);
@@ -102,18 +102,18 @@ exports.createReview = async (req, res, next) => {
 exports.updateReview = async (req, res, next) => {
 	const errors = validationResult(req);
 	
-	if (!errors.isEmpty()) {
-		const error = new Error('Validation failed, entered data is incorrect.');
-		error.statusCode = 422;
-		throw error;
-	}
-	
-	const reviewId = req.params.reviewId;
-	const title = req.body.title;
-	const body = req.body.body;
-	const rating = req.body.rating;
-	
 	try {
+		if (!errors.isEmpty()) {
+			const error = new Error('Validation failed, entered data is incorrect.');
+			error.statusCode = 422;
+			throw error;
+		}
+		
+		const reviewId = req.params.reviewId;
+		const title = req.body.title;
+		const body = req.body.body;
+		const rating = req.body.rating;
+		
 		const review = await Review.findById(reviewId);
 		
 		if (!review) {

@@ -20,7 +20,8 @@ router.put('/signup', [
 		.normalizeEmail(),
 	body('password')
 		.trim()
-		.isLength({ min: 5 }),
+		.isLength({ min: 6 })
+		.withMessage('Password must be at least 6 characters long.'),
 	body('username')
 		.trim()
 		.not()

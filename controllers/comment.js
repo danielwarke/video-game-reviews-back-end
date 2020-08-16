@@ -29,22 +29,22 @@ exports.getReviewComments = async (req, res, next) => {
 exports.createComment = async (req, res, next) => {
 	const errors = validationResult(req);
 	
-	if (!errors.isEmpty()) {
-		const error = new Error('Validation failed, entered data is incorrect.');
-		error.statusCode = 422;
-		throw error;
-	}
-	
-	const reviewId = req.params.reviewId;
-	const body = req.body.body;
-	
-	const comment = new Comment({
-		body: body,
-		review: reviewId,
-		creator: req.userId
-	});
-	
 	try {
+		if (!errors.isEmpty()) {
+			const error = new Error('Validation failed, entered data is incorrect.');
+			error.statusCode = 422;
+			throw error;
+		}
+		
+		const reviewId = req.params.reviewId;
+		const body = req.body.body;
+		
+		const comment = new Comment({
+			body: body,
+			review: reviewId,
+			creator: req.userId
+		});
+		
 		const newComment = await comment.save();
 		
 		const review = await Review.findById(reviewId);
@@ -71,16 +71,16 @@ exports.createComment = async (req, res, next) => {
 exports.updateComment = async (req, res, next) => {
 	const errors = validationResult(req);
 	
-	if (!errors.isEmpty()) {
-		const error = new Error('Validation failed, entered data is incorrect.');
-		error.statusCode = 422;
-		throw error;
-	}
-	
-	const commentId = req.params.commentId;
-	const body = req.body.body;
-	
 	try {
+		if (!errors.isEmpty()) {
+			const error = new Error('Validation failed, entered data is incorrect.');
+			error.statusCode = 422;
+			throw error;
+		}
+		
+		const commentId = req.params.commentId;
+		const body = req.body.body;
+		
 		const comment = await Comment.findById(commentId);
 		
 		if (!comment) {

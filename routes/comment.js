@@ -1,25 +1,25 @@
 const express = require('express');
-const { body } = require('express-validator/check');
+const { body } = require('express-validator');
 
 const router = express.Router();
 
 const commentCtrl = require('../controllers/comment');
 const isAuth = require('../middleware/is-auth');
 
-router.get('/comments', isAuth, commentCtrl.getReviews);
+router.get('/reviews/:reviewId/comments', isAuth, commentCtrl.getReviewComments);
 
-router.post('/comment', isAuth, [
+router.post('/reviews/:reviewId/comment', isAuth, [
 	body('body')
 		.trim()
 		.isLength({ min: 5 })
 ], commentCtrl.createComment);
 
-router.put('/comment/:commentId', isAuth, [
+router.put('/reviews/:reviewId/comment/:commentId', isAuth, [
 	body('body')
 		.trim()
 		.isLength({ min: 5 })
 ], commentCtrl.updateComment);
 
-router.delete('/comment/:commentId', isAuth, commentCtrl.deleteComment);
+router.delete('/reviews/:reviewId/comment/:commentId', isAuth, commentCtrl.deleteComment);
 
 module.exports = router;

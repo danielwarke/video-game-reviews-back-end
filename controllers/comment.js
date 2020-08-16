@@ -4,7 +4,7 @@ const Review = require('../models/review');
 const Comment = require('../models/comment');
 
 exports.getReviewComments = async (req, res, next) => {
-	const reviewId = req.body.reviewId;
+	const reviewId = req.params.reviewId;
 	const currentPage = req.query.page || 1;
 	const perPage = 30;
 	
@@ -35,7 +35,7 @@ exports.createComment = async (req, res, next) => {
 		throw error;
 	}
 	
-	const reviewId = req.body.reviewId;
+	const reviewId = req.params.reviewId;
 	const body = req.body.body;
 	
 	const comment = new Comment({

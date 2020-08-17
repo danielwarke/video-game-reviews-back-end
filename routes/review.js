@@ -21,7 +21,7 @@ router.post('/review', isAuth, [
 		.isNumeric()
 ], reviewCtrl.createReview);
 
-router.get('/review/:reviewId', isAuth, reviewCtrl.getReview);
+router.get('/review/:reviewId', reviewCtrl.getReview);
 
 router.put('/review/:reviewId', isAuth, [
 	body('title')

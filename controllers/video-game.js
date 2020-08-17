@@ -1,5 +1,8 @@
+const { validationResult } = require('express-validator/check');
+
 const VideoGame = require('../models/video-game');
 const Review = require('../models/review');
+const User = require('../models/user');
 
 exports.getVideoGames = async (req, res, next) => {
 	const currentPage = req.query.page || 1;
@@ -11,7 +14,7 @@ exports.getVideoGames = async (req, res, next) => {
 		
 		res.status(200).json({
 			message: 'Fetched video games successfully.',
-			VideoGame: videoGames,
+			videoGames: videoGames,
 			totalItems: totalItems
 		});
 	} catch (err) {
@@ -67,6 +70,7 @@ exports.createVideoGame = async (req, res, next) => {
 			imageUrl: imageUrl
 		});
 		
+		const user = await User.findById(req.userId);
 		const newVideoGame = await videoGame.save();
 		
 		res.status(201).json({

@@ -5,17 +5,29 @@ const Review = require('../models/review');
 const User = require('../models/user');
 
 exports.getVideoGames = async (req, res, next) => {
-	const currentPage = req.query.page || 1;
-	const perPage = 30;
-	
 	try {
-		const totalItems = await VideoGame.find().countDocuments();
-		const videoGames = await VideoGame.find().skip((currentPage - 1) * perPage).limit(perPage);
+		const videoGames = await VideoGame.find().lean().sort({ createdAt: -1 }).populate('reviews', 'rating');
+		
+		videoGames.forEach(videoGame => {
+			let averageRating = 0;
+			const totalReviews = videoGame.reviews.length;
+			
+			if (totalReviews) {
+				let totalRatings = 0;
+				
+				videoGame.reviews.forEach(review => {
+					totalRatings += review.rating;
+				});
+				
+				averageRating = (totalRatings / totalReviews);
+			}
+			
+			videoGame.averageRating = averageRating;
+		});
 		
 		res.status(200).json({
 			message: 'Fetched video games successfully.',
-			videoGames: videoGames,
-			totalItems: totalItems
+			videoGames: videoGames
 		});
 	} catch (err) {
 		if (!err.statusCode) {
@@ -27,13 +39,18 @@ exports.getVideoGames = async (req, res, next) => {
 };
 
 exports.getVideoGameReviews = async (req, res, next) => {
-	const videoGameId = req.body.videoGameId;
+	const videoGameId = req.params.videoGameId;
 	const currentPage = req.query.page || 1;
 	const perPage = 10;
 	
 	try {
 		const totalItems = await Review.find({ videoGame: videoGameId }).countDocuments();
-		const videoGameReviews = await Review.find({ videoGame: videoGameId }).skip((currentPage - 1) * perPage).limit(perPage);
+		const videoGameReviews = await Review.find({ videoGame: videoGameId })
+			.skip((currentPage - 1) * perPage)
+			.limit(perPage)
+			.populate('videoGame', 'title imageUrl')
+			.populate('creator', 'username _id')
+			.sort({ createdAt: -1 });
 		
 		res.status(200).json({
 			message: 'Fetched reviews successfully.',

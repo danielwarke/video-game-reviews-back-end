@@ -6,7 +6,7 @@ const router = express.Router();
 const commentCtrl = require('../controllers/comment');
 const isAuth = require('../middleware/is-auth');
 
-router.get('/reviews/:reviewId/comments', isAuth, commentCtrl.getReviewComments);
+router.get('/reviews/:reviewId/comments', commentCtrl.getReviewComments);
 
 router.post('/reviews/:reviewId/comment', isAuth, [
 	body('body')

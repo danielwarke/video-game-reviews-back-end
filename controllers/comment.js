@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator/check');
 
 const Review = require('../models/review');
 const Comment = require('../models/comment');
+const User = require('../models/user');
 
 exports.getReviewComments = async (req, res, next) => {
 	const reviewId = req.params.reviewId;
@@ -10,7 +11,10 @@ exports.getReviewComments = async (req, res, next) => {
 	
 	try {
 		const totalItems = await Comment.find({ review: reviewId }).countDocuments();
-		const comments = await Comment.find({ review: reviewId }).skip((currentPage - 1) * perPage).limit(perPage);
+		const comments = await Comment.find({ review: reviewId })
+			.skip((currentPage - 1) * perPage)
+			.limit(perPage)
+			.populate('creator', 'username');
 		
 		res.status(200).json({
 			message: 'Fetched comments successfully.',
@@ -46,6 +50,7 @@ exports.createComment = async (req, res, next) => {
 		});
 		
 		const newComment = await comment.save();
+		const user = await User.findById(req.userId);
 		
 		const review = await Review.findById(reviewId);
 		review.comments.push(comment);

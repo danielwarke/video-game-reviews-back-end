@@ -23,7 +23,8 @@ exports.signup = async (req, res, next) => {
 		const user = new User({
 			email: email,
 			password: hashedPw,
-			username: username
+			username: username,
+			admin: false
 		});
 		
 		const newUser = await user.save();
@@ -68,6 +69,9 @@ exports.login = async (req, res, next) => {
 		res.status(200).json({
 			token: token,
 			userId: user._id.toString(),
+			username: user.username,
+			email: user.email,
+			admin: user.admin,
 			expiresIn: 240
 		});
 	} catch (err) {

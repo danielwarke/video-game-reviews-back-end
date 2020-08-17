@@ -11,7 +11,12 @@ exports.getReviews = async (req, res, next) => {
 	
 	try {
 		const totalItems = await Review.find().countDocuments();
-		const reviews = await Review.find().skip((currentPage - 1) * perPage).limit(perPage);
+		const reviews = await Review.find()
+			.skip((currentPage - 1) * perPage)
+			.limit(perPage)
+			.populate('videoGame', 'title imageUrl')
+			.populate('creator', 'username _id')
+			.sort({ createdAt: -1 });
 		
 		res.status(200).json({
 			message: 'Fetched reviews successfully.',
@@ -28,13 +33,18 @@ exports.getReviews = async (req, res, next) => {
 };
 
 exports.getUserReviews = async (req, res, next) => {
-	const userId = req.body.userId;
+	const userId = req.params.userId;
 	const currentPage = req.query.page || 1;
 	const perPage = 10;
 	
 	try {
 		const totalItems = await Review.find({ creator: userId }).countDocuments();
-		const userReviews = await Review.find({ creator: userId }).skip((currentPage - 1) * perPage).limit(perPage);
+		const userReviews = await Review.find({ creator: userId })
+			.skip((currentPage - 1) * perPage)
+			.limit(perPage)
+			.populate('videoGame', 'title imageUrl')
+			.populate('creator', 'username _id')
+			.sort({ createdAt: -1 });
 		
 		res.status(200).json({
 			message: 'Fetched reviews successfully.',
@@ -66,6 +76,7 @@ exports.createReview = async (req, res, next) => {
 		const rating = req.body.rating;
 		
 		const review = new Review({
+			videoGame: videoGameId,
 			title: title,
 			body: body,
 			rating: rating,
@@ -173,7 +184,7 @@ exports.deleteReview = async (req, res, next) => {
 	const reviewId = req.params.reviewId;
 	
 	try {
-		const review = await Post.findById(reviewId);
+		const review = await Review.findById(reviewId);
 		
 		if (!review) {
 			const error = new Error('Could not find review.');

@@ -1,3 +1,4 @@
+const config = require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -35,5 +36,5 @@ app.use((error, req, res, next) => {
 });
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true }).then(result => {
-	app.listen(8080);
+	app.listen(process.env.DEFAULT_PORT);
 }).catch(err => console.error(err));

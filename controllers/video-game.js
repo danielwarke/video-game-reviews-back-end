@@ -48,9 +48,18 @@ exports.getVideoGameReviews = async (req, res, next) => {
 		const videoGameReviews = await Review.find({ videoGame: videoGameId })
 			.skip((currentPage - 1) * perPage)
 			.limit(perPage)
+			.lean()
 			.populate('videoGame', 'title imageUrl')
 			.populate('creator', 'username _id')
 			.sort({ createdAt: -1 });
+		
+		videoGameReviews.forEach(review => {
+			if (review.body.length > 500) {
+				review.bodyPreview = review.body.substring(0, 500) + '...';
+			} else {
+				review.bodyPreview = review.body;
+			}
+		});
 		
 		res.status(200).json({
 			message: 'Fetched reviews successfully.',

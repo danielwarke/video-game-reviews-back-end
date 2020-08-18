@@ -118,7 +118,7 @@ exports.updateComment = async (req, res, next) => {
 };
 
 exports.deleteComment = async (req, res, next) => {
-	const commentId = req.params.reviewId;
+	const commentId = req.params.commentId;
 	
 	try {
 		const comment = await Comment.findById(commentId);
@@ -138,7 +138,7 @@ exports.deleteComment = async (req, res, next) => {
 		const deletedComment = await Comment.findByIdAndRemove(commentId);
 		
 		// Remove comment from review
-		const reviewId = comment.review;
+		const reviewId = req.params.reviewId;
 		const review = await Review.findById(reviewId);
 		review.comments.pull(commentId);
 		const updatedReview = await review.save();

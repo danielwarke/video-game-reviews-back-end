@@ -14,9 +14,18 @@ exports.getReviews = async (req, res, next) => {
 		const reviews = await Review.find()
 			.skip((currentPage - 1) * perPage)
 			.limit(perPage)
+			.lean()
 			.populate('videoGame', 'title imageUrl')
 			.populate('creator', 'username _id')
 			.sort({ createdAt: -1 });
+		
+		reviews.forEach(review => {
+			if (review.body.length > 500) {
+				review.bodyPreview = review.body.substring(0, 500) + '...';
+			} else {
+				review.bodyPreview = review.body;
+			}
+		});
 		
 		res.status(200).json({
 			message: 'Fetched reviews successfully.',
@@ -42,9 +51,18 @@ exports.getUserReviews = async (req, res, next) => {
 		const userReviews = await Review.find({ creator: userId })
 			.skip((currentPage - 1) * perPage)
 			.limit(perPage)
+			.lean()
 			.populate('videoGame', 'title imageUrl')
 			.populate('creator', 'username _id')
 			.sort({ createdAt: -1 });
+		
+		userReviews.forEach(review => {
+			if (review.body.length > 500) {
+				review.bodyPreview = review.body.substring(0, 500) + '...';
+			} else {
+				review.bodyPreview = review.body;
+			}
+		});
 		
 		res.status(200).json({
 			message: 'Fetched reviews successfully.',

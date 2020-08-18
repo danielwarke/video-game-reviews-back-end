@@ -18,6 +18,9 @@ const userSchema = new Schema({
 		type: Boolean,
 		required: true
 	},
+	tempPassword: {
+		type: Boolean
+	},
 	reviews: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Review'

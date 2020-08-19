@@ -6,7 +6,10 @@ const User = require('../models/user');
 
 exports.getVideoGames = async (req, res, next) => {
 	try {
-		const videoGames = await VideoGame.find().lean().sort({ createdAt: -1 }).populate('reviews', 'rating');
+		const videoGames = await VideoGame.find()
+			.lean()
+			.sort({ title: 1 })
+			.populate('reviews', 'rating');
 		
 		videoGames.forEach(videoGame => {
 			let averageRating = 0;

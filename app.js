@@ -36,5 +36,5 @@ app.use((error, req, res, next) => {
 });
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true }).then(result => {
-	app.listen(process.env.DEFAULT_PORT);
+	app.listen(procses.env.PORT || process.env.DEFAULT_PORT);
 }).catch(err => console.error(err));

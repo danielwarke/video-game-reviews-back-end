@@ -10,6 +10,9 @@
     "start:dev": "nodemon app"
   },
   "author": "Dano Warke",
+  "engines": {
+    "node": "10.x"
+  },
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.0",

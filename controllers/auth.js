@@ -24,8 +24,8 @@ exports.signup = async (req, res, next) => {
 			throw error;
 		}
 		
-		const email = req.body.email.toLowerCase();
-		const username = req.body.username;
+		const email = req.body.email.toLowerCase().trim();
+		const username = req.body.username.trim();
 		const password = req.body.password;
 		
 		const hashedPw = await bcrypt.hash(password, 12);
@@ -51,7 +51,7 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-	const email = req.body.email.toLowerCase();
+	const email = req.body.email.toLowerCase().trim();
 	const password = req.body.password;
 	
 	try {
@@ -94,7 +94,7 @@ exports.login = async (req, res, next) => {
 };
 
 exports.forgotPassword = async (req, res, next) => {
-	const email = req.body.email.toLowerCase();
+	const email = req.body.email.toLowerCase().trim();
 	
 	try {
 		const user = await User.findOne({ email: email });

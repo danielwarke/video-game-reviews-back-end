@@ -17,8 +17,7 @@ router.put('/signup', [
 					return Promise.reject('Email address already exists.');
 				}
 			})
-		})
-		.normalizeEmail(),
+		}),
 	body('password')
 		.trim()
 		.isLength({ min: 6 })
@@ -29,7 +28,11 @@ router.put('/signup', [
 		.isEmpty()
 ], authCtrl.signup);
 
-router.post('/login', authCtrl.login);
+router.post('/login', [
+	body('email')
+		.isEmail()
+		.withMessage('Please enter a valid email.')
+], authCtrl.login);
 
 router.post('/forgot-password', authCtrl.forgotPassword);
 

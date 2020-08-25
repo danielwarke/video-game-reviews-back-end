@@ -180,7 +180,9 @@ exports.getReview = async (req, res, next) => {
 	const reviewId = req.params.reviewId;
 	
 	try {
-		const review = await Review.findById(reviewId);
+		const review = await Review.findById(reviewId)
+			.populate('videoGame', 'title imageUrl')
+			.populate('creator', 'username _id');
 		
 		if (!review) {
 			const error = new Error('Could not find review.');
@@ -188,7 +190,10 @@ exports.getReview = async (req, res, next) => {
 			return next(error);
 		}
 		
-		res.status(200).json({ message: 'Review fetched.', review: review });
+		res.status(200).json({
+			message: 'Review fetched.',
+			review: review
+		});
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500;
